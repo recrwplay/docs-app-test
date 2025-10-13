@@ -69,8 +69,10 @@ jobs:
       matrix:
         environments: ${{ fromJson(needs.prepare-ref-env.outputs.environments) }}
 
+    environment: ${{ matrix.environments }}
+
     steps:
       - name: Echo
-        run: echo "If this step runs then approval has been granted" >> $GITHUB_OUTPUT
-
-
+        if: ${{ matrix.environments == 'prod' }}
+        run: |
+          echo "If this step runs then approval has been granted" >> $GITHUB_OUTPUT
