@@ -75,4 +75,4 @@ jobs:
       - name: Echo
         if: ${{ matrix.environments == 'prod' }}
         run: |
-          echo "If this step runs then approval has been granted" >> $GITHUB_OUTPUT
+          echo "If this step runs then approval has been granted" >> $GITHUB_STEP_SUMMARY
