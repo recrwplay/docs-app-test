@@ -1,0 +1,7 @@
+= Links
+
+Always use attributes to link to `neo4j.com` pages, as shown by the following examples.
+
+* link:{neo4j-base-uri}[Neo4j]
+* link:{neo4j-docs-base-uri}[Neo4j Docs]
+* link:{common-license-page-uri}[Neo4j Documentation License]
