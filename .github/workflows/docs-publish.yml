@@ -29,10 +29,6 @@ jobs:
 
   prepare-docs:
 
-    # environment: ${{ github.event.client_payload.publish_env }}
-
-    needs: verify-dispatch
-
     runs-on: ubuntu-latest
 
     outputs:
