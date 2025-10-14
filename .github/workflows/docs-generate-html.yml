@@ -85,7 +85,6 @@ jobs:
               "publish_env": "${{ matrix.environments }}"
             }
 
-    steps:
       - name: Echo
         if: ${{ matrix.environments == 'prod' }}
         run: |
