@@ -72,6 +72,15 @@ jobs:
           mkdir build
           unzip -o docs.zip -d docs
 
+      # we could set include-hidden-files to true to include the .etc and .meta dirs
+      - name: Upload HTML artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs
+          path: docs/
+          include-hidden-files: true
+          retention-days: ${{ inputs.retain-artifacts }} 
+
       - name: Get docsets
         id: get-docsets
         run: |
