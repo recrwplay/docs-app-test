@@ -8,6 +8,9 @@ content:
   sources:
   - url: ./
     branches: ['HEAD']
+    start_paths:
+    - docs-template
+    - gha-test-common-content
     exclude:
     - '!**/_includes/*'
     - '!**/readme.adoc'
