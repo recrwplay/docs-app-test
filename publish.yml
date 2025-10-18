@@ -31,6 +31,7 @@ antora:
   - "@neo4j-antora/roles-labels"
   - "@neo4j-antora/table-footnotes"
   - "@neo4j-antora/xref-hash-validator"
+  - "./scripts/page-list.js"
 
 asciidoc:
   extensions:
