@@ -19,7 +19,8 @@ module.exports.register = function ({ config }) {
         return
       }
 
-      pageList[file.src.path] = {
+      let relPath = `${file.src.origin.startPath}/${file.src.path}`.replace(/^\/+/, '');
+      pageList[relPath] = {
         title: file.asciidoc?.doctitle,
         url: file.out.path,
       }
