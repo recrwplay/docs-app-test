@@ -22,3 +22,5 @@ start_page: docs-template:ROOT:index.adoc
 ====
 This repo contains example content such as asciidoc pages, re-usable fragments, and examples, to show where different types of files should be stored in an Antora project.
 ====
+
+image:gha-test-common:ROOT:nodes-25.png[]

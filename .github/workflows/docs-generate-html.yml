@@ -50,6 +50,7 @@ jobs:
     uses: neo4j/docs-tools/.github/workflows/reusable-docs-build.yml@v2
     with:
       package-script: 'verify:publish'
+      antora-extensions-exclude: '@neo4j-antora/antora-page-list'
       build-ref: ${{needs.prepare-ref-env.outputs.build-ref}}
       fetch-depth: 0
 
