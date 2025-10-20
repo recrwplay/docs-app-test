@@ -30,7 +30,9 @@ module.exports.register = function ({ config }) {
     const components = contentCatalog.getComponents()
     const urls = componentsToArray(components);
 
-    pageList["componentVersions"] = { urls }
+    const filteredComponents = filterKeys(components)
+
+    pageList["componentVersions"] = filteredComponents
 
     const pageListFile = generateChangelogFile(pageList)
     siteCatalog.addFile(pageListFile)
@@ -40,6 +42,19 @@ module.exports.register = function ({ config }) {
 
 function generateChangelogFile (pageList) {
     return new File({ contents: Buffer.from(JSON.stringify(pageList)), out: { path: './.meta/pageList' } })
+}
+
+function filterKeys(components) {
+  const filtered = {}
+
+  for (const component in components) {
+    filtered[components[component].name] = {versions: []}
+    filtered[components[component].name].versions = components[component].versions.map(v => {
+      return v.version
+    })
+  }
+
+  return filtered
 }
 
 function componentsToArray(components) {
