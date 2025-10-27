@@ -68,11 +68,11 @@ jobs:
       #       var fs = require('fs');
       #       fs.writeFileSync('${{ env.WORKSPACE }}/docs.zip', Buffer.from(download.data));
       
-      - name: Extract files
-        id: unzip
-        run: |
-          mkdir build
-          unzip -o docs.zip -d docs
+      # - name: Extract files
+      #   id: unzip
+      #   run: |
+      #     mkdir build
+      #     unzip -o docs.zip -d docs
 
       # we could set include-hidden-files to true to include the .etc and .meta dirs
       - name: Upload HTML artifact
