@@ -20,51 +20,52 @@ env:
   REPO: ${{ github.event.client_payload.repo }}
   RUN_ID: ${{ github.event.client_payload.run_id }}
   PUBLISH_ENV: ${{ github.event.client_payload.publish_env }}
-  ADDITIONAL_PUBLISH_DIRS: ${{ github.event.client_payload.additional_publish_dirs == null && '' || github.event.client_payload.additional_publish_dirs }}
   ARGS: ${{ github.event.client_payload.args }}
-  APPROVED_PUBLISHERS: ${{ secrets.APPROVED_PUBLISHERS }}
+  # APPROVED_PUBLISHERS: ${{ secrets.APPROVED_PUBLISHERS }}
   WORKSPACE: ${{ github.workspace }}
 
 jobs:
+
+  # there's a pre-validation step here when we go to production
+  # which makes sure the account that triggered this workflow is an approved publisher
 
   prepare-docs:
 
     runs-on: ubuntu-latest
 
-    outputs:
-      docsets: ${{ steps.get-docsets.outputs.docsets }}
-
     steps:
 
-      - name: Cache docs dir
-        id: create-cache
-        uses: actions/cache@v4
+      - name: "Download HTML artifact"
+        id: download-artifact
+        uses: actions/download-artifact@v5
         with:
-          path: ./docs
-          key: ${{ env.OWNER }}-${{ env.REPO }}-cache-${{ env.RUN_ID }}
+          name: docs
+          github-token: ${{ secrets.DOCS_DISPATCH_TOKEN }} # token with actions:read permissions on target repo
+          repository: ${{ env.OWNER }}/${{ env.REPO }}
+          run-id: ${{ env.RUN_ID }}
 
-      - name: "Download built documentation"
-        id: download-docs
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.DOCS_DISPATCH_TOKEN }}
-          script: |
-            var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
-               owner: '${{ env.OWNER }}',
-               repo: '${{ env.REPO }}',
-               run_id: ${{ env.RUN_ID }},
-            });
-            var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
-              return artifact.name == "docs"
-            })[0];
-            var download = await github.rest.actions.downloadArtifact({
-               owner: '${{ env.OWNER }}',
-               repo: '${{ env.REPO }}',
-               artifact_id: matchArtifact.id,
-               archive_format: 'zip',
-            });
-            var fs = require('fs');
-            fs.writeFileSync('${{ env.WORKSPACE }}/docs.zip', Buffer.from(download.data));
+      # - name: "Download built documentation"
+      #   id: download-docs
+      #   uses: actions/github-script@v7
+      #   with:
+      #     github-token: ${{ secrets.DOCS_DISPATCH_TOKEN }}
+      #     script: |
+      #       var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+      #          owner: '${{ env.OWNER }}',
+      #          repo: '${{ env.REPO }}',
+      #          run_id: ${{ env.RUN_ID }},
+      #       });
+      #       var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+      #         return artifact.name == "docs"
+      #       })[0];
+      #       var download = await github.rest.actions.downloadArtifact({
+      #          owner: '${{ env.OWNER }}',
+      #          repo: '${{ env.REPO }}',
+      #          artifact_id: matchArtifact.id,
+      #          archive_format: 'zip',
+      #       });
+      #       var fs = require('fs');
+      #       fs.writeFileSync('${{ env.WORKSPACE }}/docs.zip', Buffer.from(download.data));
       
       - name: Extract files
         id: unzip
@@ -79,20 +80,12 @@ jobs:
           name: docs
           path: docs/
           include-hidden-files: true
-          retention-days: ${{ inputs.retain-artifacts }} 
 
-      - name: Get docsets
-        id: get-docsets
-        run: |
-          shopt -s globstar
-          docsets=$(ls -R **/sitemap.xml | sed -r 's/docs\/([^\/]*).*/\1/' | jq -R -s -c 'split("\n")[:-1]'  | jq -c 'del(.[] | select(. == "sitemap.xml"))')
-          if [[ -n $ADDITIONAL_PUBLISH_DIRS ]]; then
-            jq -n $docsets | jq -c '. + ["$ADDITIONAL_PUBLISH_DIRS"]'
-          fi
-          echo "docsets=${docsets[@]}" >> $GITHUB_OUTPUT
-
+  # this job runs in the relevant environment (dev or prod)
+  # so we can enforce approval in the prod environment when necessary
   publish-docs:
 
+    # this is usuall a matrix
     environment: 'prod'
 
     needs: prepare-docs
@@ -100,13 +93,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
-      - name: Restore docs cache
-        id: restore-cache
-        uses: actions/cache@v4
-        with:
-          path: ./docs
-          key: ${{ env.OWNER }}-${{ env.REPO }}-cache-${{ env.RUN_ID }}
 
       - name: Summary
         id: summary

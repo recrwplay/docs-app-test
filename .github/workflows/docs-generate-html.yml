@@ -82,8 +82,6 @@ jobs:
               "org": "${{ github.repository_owner }}",
               "repo": "${{ github.event.repository.name }}",
               "run_id": "${{ github.run_id }}",
-              "args": "--dryrun",
-              "additional_publish_dirs": "gha-test-common",
               "publish_env": "${{ matrix.environments }}"
             }
 
