@@ -44,6 +44,7 @@ jobs:
           echo "build-ref=${build_from}" >> $GITHUB_OUTPUT
           echo "environments=${environments[@]}" >> $GITHUB_OUTPUT
 
+  # in testing we are excluding teh page-list extension because we have a modified version that includes more meta info
   docs-build:
     name: Generate HTML
     needs: prepare-ref-env

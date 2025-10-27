@@ -40,6 +40,7 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           name: docs
+          path: docs/
           github-token: ${{ secrets.DOCS_DISPATCH_TOKEN }} # token with actions:read permissions on target repo
           repository: ${{ env.OWNER }}/${{ env.REPO }}
           run-id: ${{ env.RUN_ID }}
