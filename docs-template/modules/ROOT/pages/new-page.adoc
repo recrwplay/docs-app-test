@@ -1,3 +1,5 @@
 = New page
 
 This is a new page called {doctitle} in the (page-component-title) component.
+
+Cool.
