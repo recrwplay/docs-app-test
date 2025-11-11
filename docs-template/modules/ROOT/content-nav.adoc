@@ -3,3 +3,4 @@
 * xref:content-types.adoc[]
 * xref:trademarks.adoc[]
 * xref:links.adoc[]
+* xref:new-page.adoc[]
