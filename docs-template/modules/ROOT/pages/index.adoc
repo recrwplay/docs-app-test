@@ -24,3 +24,8 @@ This repo contains example content such as asciidoc pages, re-usable fragments, 
 ====
 
 image:gha-test-common:ROOT:nodes-25.png[]
+
+
+== January 2026
+
+Lorem ipsum.
