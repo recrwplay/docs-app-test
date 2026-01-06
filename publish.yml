@@ -7,7 +7,7 @@ site:
 content:
   sources:
   - url: ./
-    branches: ['HEAD', 'dev']
+    branches: ['HEAD']
     start_paths:
     - docs-template
     - gha-test-common-content
