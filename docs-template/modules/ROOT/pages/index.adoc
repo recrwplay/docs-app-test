@@ -29,3 +29,5 @@ image:gha-test-common:ROOT:nodes-25.png[]
 == January 2026
 
 Lorem ipsum dolor sit amet.
+
+Testing the redirect note.
